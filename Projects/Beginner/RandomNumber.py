@@ -25,3 +25,8 @@ if predict == toss:
     print("You win")
 else:
     print("You lose")
+
+#Choosing random string from list
+l = ["Apple", "Banana", "Grapes", "Kiwi"]
+ch = random.choice(l)
+print(ch)
