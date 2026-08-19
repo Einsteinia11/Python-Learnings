@@ -16,3 +16,4 @@ elif c == scissors and n == 1:
     print("You won as computer thrown scissors over rock")
 elif c == scissors and n == 2:
     print("Computer won by throwing scissors over paper")
+    
