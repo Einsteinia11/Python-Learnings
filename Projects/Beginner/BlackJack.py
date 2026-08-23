@@ -51,8 +51,8 @@ def start():
 
             Your cards:                                      Opponent's cards:
             ┌──────┐                      ┌───────┐
-            │  {user1_cards[0]}   │                      │   {user2_cards[0]}    │
-            │  {user1_cards[1]}   │                      │   -   │
+               {user1_cards[0]}                              {user2_cards[0]}   
+               {user1_cards[1]}                              -    
             └──────┘                      └───────┘
 
             Your total: {sum(user1_cards)}
@@ -63,7 +63,7 @@ def hit(user):
     user.remove(r)
     print("user = ", user)
     if user == user1:
-        user1_cards.append(r)
+        user1_cards.append(check(r, user1_cards))
         print(f"""
             You chose: HIT
 
@@ -76,10 +76,11 @@ def hit(user):
         print("Your cards: ",user1_cards)
     else:
         print("Dealer choose Hit he got something good card now it's your turn")
-        user2_cards.append(r)
+        user2_cards.append(check(r, user2_cards))
     return r
 def check_bust():
-    if sum(user1_cards)<21 and sum(user2_cards)>=21:
+    global game
+    if sum(user1_cards)>21 and sum(user2_cards)<=21:
         print(f"""
         ────────────────────────────────────────────
                         💥 BUST!
@@ -89,12 +90,26 @@ def check_bust():
 
             Dealer total: {sum(user2_cards)}
 
-                    DEALER WINS
+                      Dealer Wins!
         ────────────────────────────────────────────
         """)
         game = "s"
+    elif sum(user1_cards)<=21 and sum(user2_cards)>21:
+            print(f"""
+            ────────────────────────────────────────────
+                            💥 BUST!
+            ────────────────────────────────────────────
+    
+                Your total: {sum(user1_cards)}
+    
+                Dealer total: {sum(user2_cards)}
+    
+                         You Win!
+            ────────────────────────────────────────────
+            """)
+            game = "s"
         
-    elif sum(user2_cards)>21 and sum(user1_cards<=21):
+    elif sum(user2_cards)>21 and sum(user1_cards)<=21:
         print(f"""
                 ╔══════════════════════════════════════════╗
                 ║              YOU WIN! 🎉                 ║
@@ -109,11 +124,13 @@ def check_bust():
         
 
 def stand():
+    global game
     if sum(user2_cards)<17:
         check_bust()
         hit(user2)
     else:
         if sum(user1_cards) > sum(user2_cards):
+            game = "s"
             print(f"""
                 ╔══════════════════════════════════════════╗
                 ║              YOU WIN! 🎉                 ║
@@ -124,7 +141,6 @@ def stand():
 
                 The house couldn't beat you!
             """)
-            game = "s"
         elif sum(user1_cards) == sum(user2_cards):
             print("""
                 ────────────────────────────────────────────
@@ -179,7 +195,6 @@ while y == "y":
     game = "c"
     start()
     while sum(user1_cards)<21 and sum(user2_cards)<21 and game == "c":
-        print("Your Cards: ", user1_cards)
         print("""
                 ╭────────────────────────────╮
                 │        YOUR MOVE            │
@@ -191,14 +206,14 @@ while y == "y":
         #User's turn
         if choice == "h":
             hit(user1)
-            print("Your Cards: ", user1_cards)
-            print("Your Cards Total after hit: ", sum(user1_cards))
+            check_bust()
         elif choice == "s":
             stand()
         else:
             print("You entered wrong choice")
         #Dealer's Turn
-        Dealer()
+        if game != "s":
+            Dealer()
     else:
         check_bust()
     y = input("Do you want to continue or exit? press y to continue else press any other key.")
