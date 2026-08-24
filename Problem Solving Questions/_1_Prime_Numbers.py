@@ -5,7 +5,7 @@ def is_prime(num):
                 return False
         return True
     elif num==2:
-        return True
+        return False
     elif num == 1:
         return False
     elif num == 3:
@@ -17,4 +17,5 @@ def is_prime(num):
                 return False
         else:
             return True
-print(is_prime(25))
+n= int(input("Enter number:"))
+print(is_prime(n))
