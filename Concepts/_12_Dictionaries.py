@@ -81,4 +81,19 @@ print()
 for i, j in enumerate(l.items()):
     print(i, j, end = " ") # 0 (1, 'hello') 1 (2, 'hi') 2 (3, 'hola') 3 (4, 'hui') 
 print()
+print("###################")
+j = {
+    "a" : {
+        "b": "c",
+        "d": "e", 
+    },
+    "f": {
+        "b" : "h",
+        "i" : "j"
+    }
+}
+# for i in j.keys():
+#     print(i["b"]) #TypeError: string indices must be integers, not 'str'
 
+for i, k in j.items():
+    print(i, k["b"])
