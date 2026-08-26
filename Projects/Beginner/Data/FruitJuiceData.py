@@ -1,10 +1,9 @@
 change_available = {
-    10: 0,
-    20: 0,
-    50: 0,
-    100: 0,
-    200: 0,
-    500: 0
+    "tens": 7,
+    "twenty": 0,
+    "fifty": 2,
+    "hund": 0,
+    "fhund": 10
 }
 
 exit_codes = {
