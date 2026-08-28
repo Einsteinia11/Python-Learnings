@@ -123,6 +123,12 @@ def prepare_juice(choice):
         print("Oops Sorry! There's not enough resources for the ordered item")
         flag = False
 
+def calculate_savings():
+    cash = 0
+    for note, count in change_available.items():
+        cash+=note*count
+    return cash
+
 def calculate_cost():
     global cost
     global change
@@ -156,35 +162,30 @@ def calculate_cost():
         if user_cash<cost:
             print("Insufficient money please enter again")
     
-    give_change(tens, twenty, fifty, hund, fhund)
+    give_change()
 
 def check_change():
     global user_cash
     global cost
     c = 0
-    if user_cash>cost:
-        for i, j in change_available.items():
-            if c+j <= cost:
-                c+=j
-                if c == cost:
-                    break
-            print("##i = ", i, "j = ", j)
+    s = calculate_savings()
+    print(s)
+    if s>cost:
+        for note, count in change_available.items():
+            # if change_available[note]
+            print("##i = ", note, "j = ", count, "change_available[note] = ", change_available[note])
     print(c)
     if c!=cost:
         print("Insufficient Change your money is refunded! Please enter the correct amount")
-
+        calculate_cost()
         
 
-def give_change(tens = 0, twenty = 0, fifty = 0, hund = 0, fhund = 0):
+def give_change():
     global change
     global cost
     global user_cash
 
     check_change()
-    #Give change from saving
-    # for i, j in change_available.items():
-    #     print("i = ", i, "j = ", j)
-    # c = 0
     
     print(
         f"""
