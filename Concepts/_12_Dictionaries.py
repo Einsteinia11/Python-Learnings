@@ -56,11 +56,12 @@ d = {(1, 2): "tuple", "2": "string", 3.5: "float", frozenset({1, 2}): "hi"}
 print((1, 2) in d)
 
 #counting frequency of character occurred in list 
+#.get - "Hey dictionary, do you have this key? If yes, give me its value. If not, give me this default value."
 l = ["apple", "mango", "berry", "strawberry"]
 freq = {}
 for i in l:
     for j in i:
-        freq[j] = freq.get(j, 0) + 1
+        freq[j] = freq.get(j, 0) + 1 #.get() prevents a KeyError rather than directly accessing the value of a key
 print(freq)
 
 #! looping through dictionaries

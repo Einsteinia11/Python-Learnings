@@ -7,69 +7,38 @@ cost = 0
 flag = "True"
 change = 0
 user_cash = 1
+user = {10: 0, 20: 0, 50: 0, 100: 0, 500: 0}
 items_purchased = []
+
 def check(type):
     #This function checks whether all the ingredients are available or not
     global juice_type
     global cost
     global flag
-    for i in menu:
-        if type == 1:
-            juice_type = "Mango Juice"
-            break
-        elif type == 2:
-            juice_type = "Apple Juice"
-            break
-        elif type == 3:
-            juice_type = "Banana Juice"
-            break
-        elif type == 4:
-            juice_type = "Pineapple Juice"
-            break
-        elif type == 5:
-            juice_type = "Watermelon Juice"
-            break
-        elif type == 6:
-            juice_type = "Banana Milkshake"
-            break
-        else:
-            print("Invalid Number received!")
-            break
+    juice_type = menu[type-1]
+
     print("Juice = ", juice_type)
-    for i, k in ingredients.items():
-        print(k["price"])
-        print(i)
-        if i == juice_type:
-            for j, h in quantity_available.items():
-                fruitjuice= juice_type.split()
-                fruit = fruitjuice[0]
-                fruit = "".join(fruit)
-                print("i = ", i, "k = ",k, "j = ", j, " h = ",h)
-                if (juice_type == "Banana Juice" or juice_type == "Banana Milkshake") and j == "liquid_items":
-                    if k["milk"] > h["milk"] or k["water"] > h["water"]:
-                        print("less")
-                        return 101
-                    else:
-                        print("more")
-                        items_purchased.append({juice_type: k['price']})
-                        return 103
-                        
-                elif j == "fruits":
-                    if  k[fruit] > h[fruit]:
-                        print("less1")
-                        return 101
-                    else:
-                        print("more2")
-                        items_purchased({juice_type: k['price']})
-                        return 103
-                if j == "liquid_items":
-                    if k["water"] > h["water"]:
-                        print("less3")
-                        return 101
-                    else:
-                        items_purchased({juice_type: k['price']})
-                        return 103
-                    
+
+    #Check availability
+    for i, j in ingredients.items():
+        for item, needed in j.items():
+            if item == "price":
+                if needed >= quantity_available.get(item, 0):
+                    items_purchased.append({i: needed})
+                continue
+            else:
+                print(quantity_available.get(item, 0))
+                if needed > quantity_available.get(item, 0):
+                    return False
+                else:
+                    recipe = j
+                    for ing, count in recipe.items():
+                        if ing == "price":
+                            continue
+                        else:
+                            quantity_available[ing] -= needed
+                    return True
+     
 def show_menu():
     count = 1
     for i in range(0, len(menu)):
@@ -84,7 +53,7 @@ def prepare_juice(choice):
     global juice_type
     c = check(choice)
     print("c = ", c)
-    if c == 103:
+    if c == True:
         print("Everything's Good to go .", end = "", flush = True)
         # time.sleep(2)
         # print(".", end = "", flush=True)
@@ -119,7 +88,7 @@ def prepare_juice(choice):
         """)
 
 
-    elif c == 101:
+    elif c == False:
         print("Oops Sorry! There's not enough resources for the ordered item")
         flag = False
 
@@ -134,11 +103,15 @@ def calculate_cost():
     global change
     global items_purchased
     global user_cash
+    global user
+    print("cost = ",cost)
+    cost = 0
     #Calculate total cost to be paid by user
     print("items_purchased = ", items_purchased)
     for k in items_purchased:
-        for i, j in k.items():
+        for j in k.values():
             cost+=j
+
 
     print("Total cost = ", cost)
     while user_cash<cost:
@@ -150,15 +123,21 @@ def calculate_cost():
         #Calculate total cash user gave
         if tens>0:
             user_cash += tens*10
+            user[10] = tens
         if twenty>0:
             user_cash += twenty*20
+            user[20] = twenty
         if fifty>0:
             user_cash += fifty*50
+            user[50] = fifty
         if hund>0:
             user_cash += hund*100
+            user[50] = hund
         if fhund >0:
             user_cash += 500*fhund
+            user[500] = fhund
         print("total cash you gave: ", user_cash)
+        print(user)
         if user_cash<cost:
             print("Insufficient money please enter again")
     
@@ -166,15 +145,19 @@ def calculate_cost():
 
 def check_change():
     global user_cash
-    global cost
-    c = 0
-    s = calculate_savings()
-    print(s)
-    if s>cost:
-        for note, count in change_available.items():
-            # if change_available[note]
-            print("##i = ", note, "j = ", count, "change_available[note] = ", change_available[note])
-    print(c)
+    global cost #cost req to be paid
+    c = 0 #change
+    savings = calculate_savings()
+    print(savings)
+    def check_user_cash():
+        for i, j in user.items():
+            if 
+    if user_cash == cost:
+        return f"ThankYou We recieved a payment of RS {cost}"
+    elif user_cash > cost :
+        if user_cash > savings:
+            if cost < user_cash:
+                pass
     if c!=cost:
         print("Insufficient Change your money is refunded! Please enter the correct amount")
         calculate_cost()

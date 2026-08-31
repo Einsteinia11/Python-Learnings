@@ -1,15 +1,15 @@
 change_available = {
-    10: 7,
-    20: 0,
-    50: 2,
-    100: 0,
+    10: 100,
+    20: 20,
+    50: 20,
+    100: 12,
     500: 10
 }
 
 exit_codes = {
-    101: "",
+    101: "Oops Sorry! There's not enough resources for the ordered item.",
     102: "Oops Sorry! There's no change you need to give the exact amount!",
-    103: ""
+    103: "Everything's good to go."
 }
 
 menu = [
@@ -56,16 +56,20 @@ ingredients = {
     }
 }
 
+# FLATTENED -- no more "liquid_items" / "fruits" nesting. juice_machine.py
+# looks ingredients up directly by name (quantity_available.get("water", 0)),
+# so nesting them under a sub-dict made every lookup silently fail and
+# return 0, which is why every juice was being rejected.
+#
+# water bumped from 100 -> 1000: at 100, only the Banana items (50ml) could
+# ever succeed, since every other juice needs 200ml. Adjust if you want
+# different starting stock, just keep it a flat top-level key.
 quantity_available = {
-    "liquid_items" : {
-        "water": 100,        # ml
-        "milk": 5000,         # ml  
-    },
-    "fruits":{
-        "Mango": 10,          # number of mangoes
-        "Apple": 12,          # number of apples
-        "Banana": 20,         # number of bananas
-        "Pineapple": 5,       # number of pineapples
-        "Watermelon": 4,      # number of watermelons
-    }
+    "water": 1000,       # ml
+    "milk": 5000,        # ml
+    "Mango": 10,          # number of mangoes
+    "Apple": 12,          # number of apples
+    "Banana": 20,         # number of bananas
+    "Pineapple": 5,       # number of pineapples
+    "Watermelon": 4,      # number of watermelons
 }
