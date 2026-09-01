@@ -9,6 +9,7 @@ change = 0
 user_cash = 1
 user = {10: 0, 20: 0, 50: 0, 100: 0, 500: 0}
 items_purchased = []
+NOTE_ORDER = [500, 100, 50, 20, 10]
 
 def check(type):
     #This function checks whether all the ingredients are available or not
@@ -132,7 +133,7 @@ def calculate_cost():
             user[50] = fifty
         if hund>0:
             user_cash += hund*100
-            user[50] = hund
+            user[100] = hund
         if fhund >0:
             user_cash += 500*fhund
             user[500] = fhund
@@ -143,56 +144,88 @@ def calculate_cost():
     
     give_change()
 
+
+def make_change(amount):
+    """
+    Try to build `amount` from the OWNER'S till (change_available),
+    largest note first. Returns (True, breakdown) if possible,
+    else (False, {}). Doesn't touch change_available -- caller commits it.
+    """
+    remaining = amount
+    breakdown = {}
+    for note in NOTE_ORDER:              # walk from biggest note to smallest
+        available = change_available.get(note, 0)   # how many of THIS note do we have?
+        if remaining <= 0 or available <= 0:
+            continue                      # nothing more to do, or none of this note left
+        take = min(remaining // note, available)
+        #        ^^^^^^^^^^^^^^^^^^     ^^^^^^^^^
+        #        "how many of this      "but don't take more
+        #         note would fit into    than we actually have"
+        #         what's left to pay?"
+        if take > 0:
+            breakdown[note] = take
+            remaining -= take * note      # reduce what's still owed
+    if remaining == 0:
+        return True, breakdown
+    return False, {}
+
+
 def check_change():
     global user_cash
-    global cost #cost req to be paid
-    c = 0 #change
-    savings = calculate_savings()
-    print(savings)
-    def check_user_cash():
-        for i, j in user.items():
-            if 
-    if user_cash == cost:
-        return f"ThankYou We recieved a payment of RS {cost}"
-    elif user_cash > cost :
-        if user_cash > savings:
-            if cost < user_cash:
-                pass
-    if c!=cost:
-        print("Insufficient Change your money is refunded! Please enter the correct amount")
-        calculate_cost()
-        
-
-def give_change():
-    global change
     global cost
-    global user_cash
+    global user
+    global change_available
 
-    check_change()
-    
-    print(
-        f"""
-            ╔══════════════════════════════════════════╗
-            ║            🍹 FRESH JUICE BAR 🍹         ║
-            ║              CUSTOMER BILL               ║
-            ╠══════════════════════════════════════════╣
-            ║                                          ║
-            ║  Item                     Price           ║
-            ║  ──────────────────────────────────────  ║
-            ║  Mango Juice              ₹50             ║
-            ║  Banana Milkshake         ₹70             ║
-            ║                                          ║
-            ║  ──────────────────────────────────────  ║
-            ║  TOTAL                    ₹120            ║
-            ║                                          ║
-            ║  Cash Received            ₹200            ║
-            ║  Change                   ₹80             ║
-            ║                                          ║
-            ╠══════════════════════════════════════════╣
-            ║       Thank you! Visit us again! 🥭      ║
-            ╚══════════════════════════════════════════╝
-        """
-    )
+    if user_cash == cost:
+        return f"Thank You! We received a payment of Rs {cost}", {}
+
+    if user_cash < cost:
+        return "Insufficient money. Please pay the full amount.", {}
+
+    change_due = user_cash - cost
+
+    # Try 1: can the CUSTOMER's own notes cover `cost` exactly, leaving
+    # the rest as change? If so, the owner's till never needs to move.
+    kept = {}
+    remaining = cost
+    leftover = dict(user)  # scratch copy -- don't touch the real `user` dict yet
+
+    for note in NOTE_ORDER:
+        available = leftover.get(note, 0)
+        if remaining <= 0 or available <= 0:
+            continue
+        take = min(remaining // note, available)
+        if take > 0:
+            kept[note] = take
+            leftover[note] -= take
+            remaining -= take * note
+
+    if remaining == 0:
+        returned = {note: count for note, count in leftover.items() if count > 0}
+        for note, count in kept.items():
+            change_available[note] = change_available.get(note, 0) + count
+        return f"Thank you! Here is your change: {returned}", returned
+
+    # Try 2: customer's notes didn't split evenly -- fall back to the
+    # owner's separate till.
+    savings = calculate_savings()
+    if savings < change_due:
+        return "Insufficient Change! Your money is refunded. Please pay the exact amount.", {}
+
+    possible, breakdown = make_change(change_due)
+    if not possible:
+        return "Insufficient Change! Your money is refunded. Please pay the exact amount.", {}
+
+    for note, count in user.items():
+        change_available[note] = change_available.get(note, 0) + count
+    for note, count in breakdown.items():
+        change_available[note] -= count
+
+    return f"Thank you! Here is your change: {breakdown}", breakdown
+        
+def give_change():
+    message, change_breakdown = check_change()
+    print(message)
 
 c  = "y"
 while c == "y":
