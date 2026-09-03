@@ -2,7 +2,6 @@ from Data.FruitJuiceData import change_available, menu, ingredients, quantity_av
 import time
 #This code is for fruit juice machine
 juice_type = ""
-toppings = ""
 cost = 0
 flag = "True"
 change = 0
@@ -18,8 +17,6 @@ def check(type):
     global flag
     juice_type = menu[type-1]
 
-    print("Juice = ", juice_type)
-
     #Check availability
     for i, j in ingredients.items():
         for item, needed in j.items():
@@ -28,7 +25,6 @@ def check(type):
                     items_purchased.append({i: needed})
                 continue
             else:
-                print(quantity_available.get(item, 0))
                 if needed > quantity_available.get(item, 0):
                     return False
                 else:
@@ -53,22 +49,21 @@ def prepare_juice(choice):
     global flag
     global juice_type
     c = check(choice)
-    print("c = ", c)
     if c == True:
         print("Everything's Good to go .", end = "", flush = True)
-        # time.sleep(2)
-        # print(".", end = "", flush=True)
-        # time.sleep(3)
-        # print(".")
-        # print("Processing.", end = "", flush=True)
-        # time.sleep(2)
-        # print(".", end = "", flush=True)
-        # time.sleep(3)
-        # print(".")
-        # print("Preparing🥤😋.", end = "", flush=True)
-        # time.sleep(2)
-        # print(".", end = "", flush=True)
-        # time.sleep(3)
+        time.sleep(2)
+        print(".", end = "", flush=True)
+        time.sleep(3)
+        print(".")
+        print("Processing.", end = "", flush=True)
+        time.sleep(2)
+        print(".", end = "", flush=True)
+        time.sleep(3)
+        print(".")
+        print("Preparing🥤😋.", end = "", flush=True)
+        time.sleep(2)
+        print(".", end = "", flush=True)
+        time.sleep(3)
         print(".")
         print(f"Here's your {juice_type}")
         print("""
@@ -105,7 +100,7 @@ def calculate_cost():
     global items_purchased
     global user_cash
     global user
-    print("cost = ",cost)
+
     cost = 0
     #Calculate total cost to be paid by user
     print("items_purchased = ", items_purchased)

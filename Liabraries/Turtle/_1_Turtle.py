@@ -49,34 +49,37 @@ print(my_screen.canvheight)
 #         break
 # end_fill()
 
-start = pos()
-colormode(255) #Turtle expects RGB values between 0 and 1 by default, so (255, 0, 147) is invalid.
-fillcolor((9, 56, 4))
-begin_fill()
-while True:
-    forward(300)
-    left(160)
-    if distance(start) < 1:
-        break
-end_fill()
+# #8 petals flower
+# start = pos()
+# colormode(255) #Turtle expects RGB values between 0 and 1 by default, so (255, 0, 147) is invalid.
+# fillcolor((9, 56, 4))
+# begin_fill()
+# while True:
+#     forward(300)
+#     left(160)
+#     if distance(start) < 1:
+#         break
+# end_fill()
 
-fillcolor((255, 0, 147))
-begin_fill()
-while True:
-    forward(300)
-    left(170)
-    if distance(start) < 1:
-        break
-end_fill()
+# #40 petals flower
+# fillcolor((255, 0, 147))
+# begin_fill()
+# while True:
+#     forward(300)
+#     left(170)
+#     if distance(start) < 1:
+#         break
+# end_fill()
 
-start = pos()
-fillcolor((255, 0, 147))
-begin_fill()
-while True:
-    right(90)
-    forward(300)
-    left(170)
-    if distance(start) < 1:
-        break
-end_fill()
-my_screen.exitonclick()
+# #Pentagon flower
+# start = pos()
+# fillcolor((255, 0, 147))
+# begin_fill()
+# while True:
+#     right(90)
+#     forward(300)
+#     left(170)
+#     if distance(start) < 1:
+#         break
+# end_fill()
+# my_screen.exitonclick()
